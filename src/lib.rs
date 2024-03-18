@@ -1,21 +1,23 @@
+mod template;
+
+use crate::template::{
+    AppState,
+    AppEngine
+};
 use axum::{
-    extract::FromRef,
+    extract::Query,
     routing::get,
     Router,
-    response::IntoResponse,
+    response::{
+        IntoResponse,
+        Response
+    },
 };
+use std::collections::HashMap;
 use tower_service::Service;
-use handlebars::Handlebars;
 use worker::*;
-use axum_template::{engine::Engine, Key, RenderHtml};
+use axum_template::{Key, RenderHtml};
 use serde::Serialize;
-
-type AppEngine = Engine<Handlebars<'static>>;
-
-#[derive(Clone, FromRef)]
-struct AppState {
-    engine: AppEngine,
-}
 
 #[derive(Serialize, Debug)]
 pub struct RootPage {
@@ -25,17 +27,12 @@ pub struct RootPage {
 
 fn router() -> Router {
     // add template renderer
-    let mut handlebars = Handlebars::new();
-    // render from files
-    let template_str = include_str!("templates/root.hbs");
-    handlebars.register_template_string("root", template_str).unwrap();
     Router::new()
         .route("/", get(root))
         .route("/hello", get(hello))
-        .with_state(AppState {
-            engine: Engine::from(handlebars),
-        })
-        
+        // send with header: text/css
+        .route("/app.css", get(get_style))
+        .with_state(AppState::new())
 }
 
 #[event(fetch)]
@@ -53,12 +50,29 @@ pub async fn hello() -> &'static str {
     "Hello Axum!"
 }
 
-pub async fn root(engine: AppEngine) -> impl IntoResponse {
-    let data = RootPage {
+pub async fn root(
+    engine: AppEngine,
+    Query(params): Query<HashMap<String, String>>,
+) -> impl IntoResponse {
+    // get params from request
+    let mut data = RootPage {
         title: "Axum".to_string(),
         description: "Axum + Handlbars + Cloudflare Workers".to_string(),
     };
+    if params.contains_key("no-header") {
+        data.description += " boosted";
+        return RenderHtml(Key::from("no-headers/root".to_string()), engine, data);
+    }
     // "root.hbs" is the template file name
     let key = Key::from("root".to_string());
     RenderHtml(key, engine, data)
+}
+
+pub async fn get_style() -> Response {
+    let app_css = include_str!("../public/app.css");
+    Response::builder()
+        .status(200)
+        .header("content-type", "text/css")
+        .body(app_css.into())
+        .unwrap()
 }

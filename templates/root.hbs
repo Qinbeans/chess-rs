@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{{title}}</title>
+        <meta name="description" content="{{description}}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/app.css">
+        <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
+    </head>
+    <body class="bg-black w-dvw h-dvh text-white">
+        <header class="grid grid-cols-3">
+            <section class="col-start-2">
+                <ul class="flex flex-row gap-2 justify-center">
+                    <li>
+                        <a href="/?no-header=true" hx-boost="true" hx-target="#main-content">
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/play?no-header=true" hx-boost="true" hx-target="#main-content">
+                            Play
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/about?no-header=true" hx-boost="true" hx-target="#main-content">
+                            About
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </header>
+        <main id="main-content">
+            <section>
+                <h1>{{title}}</h1>
+                <p>{{description}}</p>
+            </section>
+        </main>
+    </body>
+</html>

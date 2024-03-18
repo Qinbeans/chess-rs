@@ -1,3 +1,3 @@
 # `axum` on Cloudflare Workers
 
-Demonstration of using the `axum` web framework for routing on Cloudflare Workers.
+This was an attempt at making a serverless Rust + HTMX based webserver (I know it sounds weird, but bare with me). My findings are that it would probably cost less however at the cost of your sanity as you would need to make HTML state tracking persistent for each session which would in turn require some database to be used. It would also cost some latency as there's an added step of accessing a database for states, which would lead me to suggest not combining the two tools.

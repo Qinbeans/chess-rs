@@ -41,6 +41,7 @@ dependencies = [
  "pin-project-lite",
  "rustversion",
  "serde",
+ "serde_urlencoded",
  "sync_wrapper",
  "tower",
  "tower-layer",

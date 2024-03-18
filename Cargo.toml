@@ -13,7 +13,7 @@ strip = true
 codegen-units = 1
 
 [dependencies]
-axum = { version = "0.7.4", default-features = false, features = ["macros"]}
+axum = { version = "0.7.4", default-features = false, features = ["macros", "query"] }
 console_error_panic_hook = "0.1.7"
 handlebars = {version = "5.1.0", features = ["dir_source"]}
 tower-service = "0.3.2"
