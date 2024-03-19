@@ -1,6 +1,5 @@
-target
-public
-.wrangler
-tmp
+/target
 node_modules
-Cargo.lock
+static
+pnpm-lock.yaml
+build

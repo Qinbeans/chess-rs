@@ -1,0 +1,9 @@
+target
+node_modules
+static
+*.lock
+chess-rs.code-workspace
+.git
+.vscode
+readme.md
+build
