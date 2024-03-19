@@ -1,24 +1,12 @@
 [package]
-name = "axum-on-workers"
+name = "chess-rs"
 version = "0.1.0"
 edition = "2021"
 
-[lib]
-crate-type = ["cdylib"]
-
-[profile.release]
-opt-level = "s" # optimize for size in release builds
-lto = true
-strip = true
-codegen-units = 1
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-axum = { version = "0.7.4", default-features = false, features = ["macros", "query"] }
-console_error_panic_hook = "0.1.7"
-handlebars = {version = "5.1.0", features = ["dir_source"]}
-tower-service = "0.3.2"
-wasm-bindgen-futures = "0.4.42"
-worker = { version = "0.0.21", features=['http'] }
-worker-macros = { version = "0.0.13", features=['http'] }
-axum-template = { version = "2.2.0", features = ["handlebars"] }
-serde = { version = "1.0.197", features = ["derive"] }
+rocket = { version = "0.5.0", features = ["json"] }
+rocket_dyn_templates = { version = "0.1.0", default-features = false, features = ["tera"] }
+serde = { version = "1.0.197" }
+tera = { version = "1.19.1" }

@@ -1,0 +1,21 @@
+## defaults for _all_ profiles
+[default]
+address = "0.0.0.0"
+template_dir = "tera"
+
+# Handy for limiting size of requests
+[default.limits]
+form = "64 kB"
+json = "1 MiB"
+msgpack = "2 MiB"
+"file/jpg" = "5 MiB"
+
+## set only when compiled in debug mode, i.e, `cargo build`
+[debug]
+port = 8000
+limits = { json = "10MiB" }
+
+## set only when compiled in release mode, i.e, `cargo build --release`
+[release]
+port = 80
+ip_header = false

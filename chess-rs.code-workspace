@@ -4,8 +4,16 @@
 			"path": "."
 		}
 	],
-	// make .hbs default to handlebars
-	"files.associations": {
-		"*.hbs": "handlebars"
+	"settings": {
+		"files.associations": {
+			"*.rs": "rust",
+			"*.toml": "toml",
+			"*.json": "json",
+			"*.md": "markdown",
+			"*.yml": "yaml",
+		},
+		"rust-analyzer.linkedProjects": [
+			"./Cargo.toml"
+		]
 	}
 }
