@@ -4,15 +4,11 @@ account_id = "fdbb5250325e731464a1827fff814852"
 compatibility_date = "2023-03-22"
 minify = true
 
-[site]
-bucket = "public"
-include = ["build/*", "wrangler.toml", "*.css"]
-
 [build]
-command = "cargo install -q worker-build && worker-build --release"
+command = "cargo install -q worker-build && pnpm tailwindcss -m -i assets/app.css -o static/app.css && worker-build --release"
 
 [env.dev]
-build = { command = "cargo install -q worker-build && worker-build --dev" }
+build = { command = "cargo install -q worker-build && pnpm tailwindcss -m -i assets/app.css -o static/app.css && worker-build --dev" }
 
 [dev]
 port = 8080

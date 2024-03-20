@@ -4,8 +4,6 @@
 			"path": "."
 		}
 	],
-	// make .hbs default to handlebars
-	"files.associations": {
-		"*.hbs": "handlebars"
+	"settings": {
 	}
 }

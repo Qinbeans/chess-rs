@@ -1,49 +1,39 @@
-mod template;
+mod states;
 
-use crate::template::{
-    AppState,
-    AppEngine
+use states::{
+    template::{
+        AppEngine,
+        self,
+    },
+    statics::StaticFile,
 };
 use axum::{
-    extract::Query,
-    routing::get,
-    Router,
-    response::{
-        IntoResponse,
+    body, extract::Path, http::{
+        HeaderMap,
+        Request,
         Response
-    },
+    }, response::IntoResponse, routing::get, Router
 };
-use std::collections::HashMap;
 use tower_service::Service;
-use worker::*;
+use worker::{
+    Env,
+    event,
+    Body,
+    Result,
+};
 use axum_template::{Key, RenderHtml};
-use serde::Serialize;
-
-#[derive(Serialize, Debug)]
-pub struct RootPage {
-    title: String,
-    description: String,
-}
-
-fn router() -> Router {
-    // add template renderer
-    Router::new()
-        .route("/", get(root))
-        .route("/hello", get(hello))
-        // send with header: text/css
-        .route("/app.css", get(get_style))
-        .with_state(AppState::new())
-}
+use serde_json::json;
 
 #[event(fetch)]
-async fn fetch(
-    req: HttpRequest,
-    _env: Env,
-    _ctx: Context,
-) -> Result<axum::http::Response<axum::body::Body>> {
+pub async fn main(req: Request<Body>, _env: Env, _ctx: worker::Context) -> Result<Response<body::Body>> {
     console_error_panic_hook::set_once();
 
-    Ok(router().call(req).await?)
+    let mut _router = Router::new()
+        .route("/", get(root))
+        .route("/hello", get(hello))
+        .route("/asset/:path", get(statics))
+        .with_state(template::AppState::new());
+    Ok(_router.call(req).await?)
 }
 
 pub async fn hello() -> &'static str {
@@ -52,27 +42,32 @@ pub async fn hello() -> &'static str {
 
 pub async fn root(
     engine: AppEngine,
-    Query(params): Query<HashMap<String, String>>,
+    headers: HeaderMap
 ) -> impl IntoResponse {
-    // get params from request
-    let mut data = RootPage {
-        title: "Axum".to_string(),
-        description: "Axum + Handlbars + Cloudflare Workers".to_string(),
-    };
-    if params.contains_key("no-header") {
-        data.description += " boosted";
-        return RenderHtml(Key::from("no-headers/root".to_string()), engine, data);
+    let mut boosted = false;
+    if headers.contains_key("Hx-Boosted") {
+        boosted = true;
     }
+    // get params from request
+    let data = json!({
+        "title": "Axum",
+        "description": "Axum + Handlbars + Cloudflare Workers",
+        "boosted": boosted,
+        "navbar": [
+            {
+                "name": "Home",
+                "url": "/",
+                "active": true
+            },
+        ]
+    });
     // "root.hbs" is the template file name
-    let key = Key::from("root".to_string());
+    let key = Key::from("pages/home.html".to_string());
     RenderHtml(key, engine, data)
 }
 
-pub async fn get_style() -> Response {
-    let app_css = include_str!("../public/app.css");
-    Response::builder()
-        .status(200)
-        .header("content-type", "text/css")
-        .body(app_css.into())
-        .unwrap()
+pub async fn statics(
+    Path(path): Path<String>
+) -> impl IntoResponse {
+    StaticFile(path)
 }

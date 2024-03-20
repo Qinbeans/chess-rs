@@ -3,8 +3,8 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"deploy": "pnpm tailwindcss -m -i assets/app.css -o public/app.css && wrangler deploy",
-		"dev": "pnpm tailwindcss -m -i assets/app.css -o public/app.css && wrangler dev --env dev"
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev --env dev"
 	},
 	"devDependencies": {
 		"tailwindcss": "^3.4.1",

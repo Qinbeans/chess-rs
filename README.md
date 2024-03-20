@@ -1,3 +1,3 @@
 # `axum` on Cloudflare Workers
 
-This was an attempt at making a serverless Rust + HTMX based webserver (I know it sounds weird, but bare with me). My findings are that it would probably cost less however at the cost of your sanity as you would need to make HTML state tracking persistent for each session which would in turn require some database to be used. It would also cost some latency as there's an added step of accessing a database for states, which would lead me to suggest not combining the two tools.
+I figured out a way to serve static files, albeit with a few limitations. One of the biggest is that it takes up binary space since it's compiled along with the rest of the code. This is a problem for large files, but it's a good solution for small files. I switched to Tera for templating, and it's been a great experience so far. I'm used to Jinja-like templating, so it's not that bad.
